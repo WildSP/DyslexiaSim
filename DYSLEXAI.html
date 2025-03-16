@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dyslexia Simulation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      line-height: 1.6;
+    }
+
+    .simulation {
+      margin-top: 20px;
+      padding: 10px;
+      background: #e74c3c;
+      color: white;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .simulation:hover {
+      background: #c0392b;
+    }
+
+    .text-simulation {
+      margin-top: 20px;
+      font-size: 18px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-top: 20px;
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Dyslexia Simulation</h1>
+    <p>Experience a simulation of how text might appear to someone with dyslexia.</p>
+  </header>
+
+  <div class="container">
+    <h1>Introduction</h1>
+    <p>This interactive tool helps you better understand the experience of reading for individuals with dyslexia. Press the button below to simulate text distortion. These indivisuals go through struggles harder than this but due to technical incapabilities, this is one of the best representations of dyslexia.We have a default sentence given, you can put your own sentece to see how it would look to an indivisual with dyslexia. Press the button and watch.</p>
+
+    <textarea id="custom-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta.</textarea>
+
+    <div class="simulation" id="simulate-btn">Start Simulation</div>
+
+    <div class="text-simulation" id="text-simulation"></div>
+  </div>
+
+  <script>
+    const simulateButton = document.getElementById('simulate-btn');
+    const textSimulation = document.getElementById('text-simulation');
+    const customText = document.getElementById('custom-text');
+    let isJumbling = false;
+    let intervalId;
+
+    // Initialize with custom text
+    textSimulation.textContent = customText.value;
+
+    customText.addEventListener('input', () => {
+      if (!isJumbling) {
+        textSimulation.textContent = customText.value;
+      }
+    });
+
+    simulateButton.addEventListener('click', () => {
+      if (isJumbling) {
+        clearInterval(intervalId);
+        isJumbling = false;
+        simulateButton.textContent = 'Start Simulation';
+        textSimulation.textContent = customText.value;
+      } else {
+        isJumbling = true;
+        simulateButton.textContent = 'Stop Simulation';
+        intervalId = setInterval(() => {
+          const text = customText.value;
+          const jumbledText = jumbleWords(text);
+          textSimulation.textContent = jumbledText;
+        }, 500);
+      }
+    });
+
+    function jumbleWords(text) {
+      return text.split(' ').map(word => {
+        if (word.length <= 3) return word; // Skip short words
+        const firstLetter = word[0];
+        const lastLetter = word[word.length - 1];
+        const middle = word.slice(1, -1).split('').sort(() => Math.random() - 0.5).join('');
+        return firstLetter + middle + lastLetter;
+      }).join(' ');
+    }
+  </script>
+</body>
+</html>
